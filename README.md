@@ -30,6 +30,10 @@ The HTML extension getting fixed will be the blueprint for fixing other extensio
 
 ## Release Notes
 
+### 0.0.2
+
+Handle nested values better
+
 ### 0.0.1
 
 First tested public launch

@@ -25,99 +25,81 @@ export const activate = createActivate(
       prefix: string,
       minDistance: number
     ) {
-      // We bail on a script tag to prevent Vue and Svelte file usage
-      if (text.indexOf("<script") > -1) {
-        console.warn(
-          "Bailing out of JS/TS Biscuits due to <script tag. Apologies if you just have it in a string. We need to be able to handle this better. Work in progress."
-        );
-        return [];
-      }
-
       const decorations: any[] = [];
+
+      const newText = `const foo = ${text}`;
+      const addedTextLength = newText.length - text.length;
 
       const sourceFile = ts.createSourceFile(
         "currentFile",
-        text,
+        newText,
         ts.ScriptTarget.Latest
       );
 
-      let nodes: any = sourceFile.statements;
+      let initializer = (sourceFile.statements[0] as any).declarationList
+        .declarations[0].initializer;
+
+      let nodes: any = initializer.properties || initializer.elements;
 
       let children: any[] = [];
       while (nodes.length !== 0) {
-        nodes.forEach((node: any) => {
-          console.log("NODE: ", node);
-
+        nodes.forEach((statement: any, index: number) => {
           // crawl tree
-          if (node?.statements?.length) {
-            children = [...children, ...node.statements];
-
-            let propertyStatement: any;
-            node.statements.forEach((statement: any, index: number) => {
-              if (index % 2 === 1) {
-                const { line: startLine } = ts.getLineAndCharacterOfPosition(
-                  sourceFile,
-                  statement.pos
-                );
-                const { line } = ts.getLineAndCharacterOfPosition(
-                  sourceFile,
-                  statement.end
-                );
-
-                const endOfLine = activeEditor.document.lineAt(line).range.end;
-
-                if (line - startLine >= minDistance) {
-                  decorations.push({
-                    range: new vscode.Range(
-                      activeEditor.document.positionAt(statement.end),
-                      endOfLine
-                    ),
-                    renderOptions: {
-                      after: {
-                        contentText: `${prefix} ${propertyStatement?.expression?.text}`,
-                      },
-                    },
-                  });
-                }
-              } else {
-                propertyStatement = statement;
-              }
-            });
+          if (statement?.statements?.length) {
+            children = [...children, ...statement.statements];
           }
 
-          if (activeEditor) {
-            // most likely will change start and end finding
-            const { line: startLine } = ts.getLineAndCharacterOfPosition(
-              sourceFile,
-              node.pos
-            );
-            const { line } = ts.getLineAndCharacterOfPosition(
-              sourceFile,
-              node.end
-            );
-            const endOfLine = activeEditor.document.lineAt(line).range.end;
+          if (statement?.elements?.length) {
+            children = [...children, ...statement.elements];
+          }
 
-            let contentText = "";
+          if (statement?.properties?.length) {
+            children = [...children, ...statement.properties];
+          }
 
-            if (contentText !== prefix && line - startLine >= minDistance) {
-              let maxLength: number =
-                vscode.workspace.getConfiguration().get(CONFIG_MAX_LENGTH) || 0;
-              if (maxLength && contentText.length > maxLength) {
-                contentText = contentText.substr(0, maxLength) + "...";
-              }
+          if (statement?.initializer) {
+            children.push(statement.initializer);
+          }
 
-              decorations.push({
-                range: new vscode.Range(
-                  activeEditor.document.positionAt(node.end),
-                  endOfLine
+          const { line: startLine } = ts.getLineAndCharacterOfPosition(
+            sourceFile,
+            statement.pos - addedTextLength
+          );
+          const { line } = ts.getLineAndCharacterOfPosition(
+            sourceFile,
+            statement.end - addedTextLength
+          );
+
+          const endOfLine = activeEditor.document.lineAt(line).range.end;
+
+          const statementName =
+            statement?.name?.text || statement?.name?.escapedText;
+
+          const contentText = `${prefix} ${statementName}`;
+
+          let accommodator = 0;
+          if (nodes[index + 1]) {
+            accommodator = 1;
+          }
+
+          if (
+            line - startLine >= minDistance &&
+            children.length &&
+            statementName
+          ) {
+            decorations.push({
+              range: new vscode.Range(
+                activeEditor.document.positionAt(
+                  statement.end - addedTextLength + accommodator
                 ),
-                renderOptions: {
-                  after: {
-                    contentText,
-                  },
+                endOfLine
+              ),
+              renderOptions: {
+                after: {
+                  contentText,
                 },
-              });
-            }
+              },
+            });
           }
         });
 
