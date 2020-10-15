@@ -88,18 +88,13 @@ export const activate = createActivate(
             statement?.name?.text || statement?.name?.escapedText;
 
           const contentText = `${prefix} ${statementName}`;
-          console.log("statement", ts.SyntaxKind[statement.kind]);
           let accommodator = 0;
-          console.log(
-            statementName,
-            "length and index: ",
-            children.length,
-            statement.indexInParent
-          );
 
-          // HMMMMMMMMMMM. investigate from here
-
-          if (statement.parentChildrenLength !== statement.indexInParent + 1) {
+          if (
+            statement.parentChildrenLength !== statement.indexInParent + 1 &&
+            nodes.length != index + 1 &&
+            typeof statement.indexInParent !== "undefined"
+          ) {
             accommodator = 1;
           }
 

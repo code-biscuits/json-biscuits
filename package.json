@@ -1,6 +1,6 @@
 {
   "name": "json-biscuits",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Add annotations, hereso unto for known as \"Biscuits\", to the end of the line of closing brackets. Such Biscuits would be prop names for objects and arrays. Make json soup digestible!",
   "repository": {
     "type": "git",
