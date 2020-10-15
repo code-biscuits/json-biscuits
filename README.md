@@ -30,6 +30,10 @@ The HTML extension getting fixed will be the blueprint for fixing other extensio
 
 ## Release Notes
 
+### 0.0.3
+
+Handle "last element in parent" situations differently than siblings
+
 ### 0.0.2
 
 Handle nested values better

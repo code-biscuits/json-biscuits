@@ -1,15 +1,15 @@
 {
   "name": "json-biscuits",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Add annotations, hereso unto for known as \"Biscuits\", to the end of the line of closing brackets. Such Biscuits would be prop names for objects and arrays. Make json soup digestible!",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/code-biscuits/js-ts-biscuits.git"
+    "url": "git+https://github.com/code-biscuits/json-biscuits.git"
   },
   "author": "CodeBiscuits",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/code-biscuits/js-ts-biscuits/issues"
+    "url": "https://github.com/code-biscuits/json-biscuits/issues"
   },
   "homepage": "https://github.com/code-biscuits/json-biscuits#readme",
   "private": "true",
@@ -23,7 +23,7 @@
     "Other"
   ],
   "keywords": [
-    "HTML",
+    "JSON",
     "hints",
     "readability",
     "annotation",

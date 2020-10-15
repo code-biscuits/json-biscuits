@@ -45,20 +45,32 @@ export const activate = createActivate(
       while (nodes.length !== 0) {
         nodes.forEach((statement: any, index: number) => {
           // crawl tree
-          if (statement?.statements?.length) {
-            children = [...children, ...statement.statements];
-          }
-
-          if (statement?.elements?.length) {
-            children = [...children, ...statement.elements];
-          }
-
-          if (statement?.properties?.length) {
-            children = [...children, ...statement.properties];
-          }
+          ["statements", "elements", "properties"].forEach(
+            (propName: string) => {
+              if (statement[propName]) {
+                const propStatements: any[] = [];
+                statement[propName].forEach(
+                  (propStatement: any, index: number) => {
+                    propStatements.push({
+                      ...propStatement,
+                      parent: statement,
+                      indexInParent: index,
+                      parentChildrenLength: getStatementChildrenLength(
+                        statement
+                      ),
+                    });
+                  }
+                );
+                children = [...children, ...propStatements];
+              }
+            }
+          );
 
           if (statement?.initializer) {
-            children.push(statement.initializer);
+            children.push({
+              ...statement.initializer,
+              parentLength: children.length,
+            });
           }
 
           const { line: startLine } = ts.getLineAndCharacterOfPosition(
@@ -76,9 +88,18 @@ export const activate = createActivate(
             statement?.name?.text || statement?.name?.escapedText;
 
           const contentText = `${prefix} ${statementName}`;
-
+          console.log("statement", ts.SyntaxKind[statement.kind]);
           let accommodator = 0;
-          if (nodes[index + 1]) {
+          console.log(
+            statementName,
+            "length and index: ",
+            children.length,
+            statement.indexInParent
+          );
+
+          // HMMMMMMMMMMM. investigate from here
+
+          if (statement.parentChildrenLength !== statement.indexInParent + 1) {
             accommodator = 1;
           }
 
@@ -110,3 +131,15 @@ export const activate = createActivate(
     },
   }
 );
+
+function getStatementChildrenLength(statement: any) {
+  if (statement?.statements?.length) {
+    return statement.statements.length;
+  } else if (statement?.elements?.length) {
+    return statement.elements.length;
+  } else if (statement?.properties?.length) {
+    return statement.properties.length;
+  } else {
+    return 0;
+  }
+}
