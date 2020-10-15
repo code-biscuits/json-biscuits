@@ -4,6 +4,10 @@ All notable changes to the "html-biscuits" extension will be documented in this 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+### 0.0.5
+
+Handle top level elements better
+
 ### 0.0.3
 
 Handle "last element in parent" situations differently than siblings

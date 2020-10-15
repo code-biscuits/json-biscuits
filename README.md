@@ -30,6 +30,10 @@ The HTML extension getting fixed will be the blueprint for fixing other extensio
 
 ## Release Notes
 
+### 0.0.5
+
+Handle top level elements better
+
 ### 0.0.3
 
 Handle "last element in parent" situations differently than siblings

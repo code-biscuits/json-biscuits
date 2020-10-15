@@ -91,9 +91,10 @@ export const activate = createActivate(
           let accommodator = 0;
 
           if (
-            statement.parentChildrenLength !== statement.indexInParent + 1 &&
-            nodes.length != index + 1 &&
-            typeof statement.indexInParent !== "undefined"
+            (statement.parentChildrenLength &&
+              statement.parentChildrenLength !== statement.indexInParent + 1) ||
+            (typeof statement.indexInParent === "undefined" &&
+              nodes.length != index + 1)
           ) {
             accommodator = 1;
           }
