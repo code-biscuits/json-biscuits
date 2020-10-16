@@ -87,7 +87,15 @@ export const activate = createActivate(
           const statementName =
             statement?.name?.text || statement?.name?.escapedText;
 
-          const contentText = `${prefix} ${statementName}`;
+          let contentText = `${prefix} ${statementName}`;
+
+          let maxLength: number =
+            vscode.workspace.getConfiguration().get(CONFIG_MAX_LENGTH) || 0;
+
+          if (maxLength && contentText.length > maxLength) {
+            contentText = contentText.substr(0, maxLength) + "...";
+          }
+
           let accommodator = 0;
 
           if (

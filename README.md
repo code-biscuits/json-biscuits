@@ -30,6 +30,10 @@ The HTML extension getting fixed will be the blueprint for fixing other extensio
 
 ## Release Notes
 
+### 0.0.6
+
+Use max length value to truncate biscuit length
+
 ### 0.0.5
 
 Handle top level elements better
