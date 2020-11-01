@@ -1,3 +1,9 @@
+# DEPRECATION NOTICE
+
+Development on this plugin has ceased. Further JSON Biscuit support will be inside of [Assorted Biscuits](https://marketplace.visualstudio.com/items?itemName=CodeBiscuits.assorted-biscuits). The new extension solves several bugs and offers support for several languages at once via Tree Sitter.
+
+We plan on unpublishing this extension January 1st, 2021.
+
 # json-biscuits README
 
 Use json-biscuits to make json soup and spaghetti more digestible. Annotate ALL the end brackets!!!
@@ -29,6 +35,10 @@ The HTML extension getting fixed will be the blueprint for fixing other extensio
   - default: `80`,
 
 ## Release Notes
+
+### 0.0.7
+
+- Deprecation Notice in README
 
 ### 0.0.6
 
